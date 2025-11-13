@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        async function get_file_list() {
+            const response = await fetch('/get_file', { method: 'POST'});
+            const res = await response.json();
+            return res;
+        }
+        window.onload = async function() {
+            const fileListElement = document.getElementById('file-list');
+            const files = await get_file_list();
+            files.forEach(function(file) {
+                const li = document.createElement('li');
+                li.textContent = file;
+                fileListElement.appendChild(li);
+                const downloadLink = document.createElement('a');
+                downloadLink.href = '/get_file?filename=' + encodeURIComponent(file);
+                downloadLink.textContent = ' (Download)';
+                li.appendChild(downloadLink);
+            });
+        }
+    </script>
+    <title>lan tool</title>
+</head>
+<body>
+    <header>
+        <h1>LAN Tool</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="file.html">file</a></li>
+                <li><a href="memo.html">memo</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>File Page</h2>
+        <p>This is the file page of the LAN Tool application.</p>
+        <p>File list is here</p>
+        <ul id="file-list">
+        </ul>
+    </main>
+    <footer>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="uploadfile" id="uploadfile" required>
+            <input type="submit" value="Upload File" name="submit">
+        </form>
+        <p>&copy; 2024 LAN Tool</p>
+    </footer>
+</body>
+</html>
