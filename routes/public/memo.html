@@ -3,7 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     
+    <style>
+        form {
+            position:fixed;
+            left:20%
+        }
+    </style>
+    <script>
+        async function get_memo_list() {
+            const response = await fetch('/memo', { method: 'GET'});
+            const res = await response.json();
+            return res;
+        }
+        window.onload = async function() {
+            const memoListElement = document.getElementById('memo-list');
+            const memos = await get_memo_list();
+            memos.forEach(function(memo) {
+                const li = document.createElement('li');
+                li.textContent = memo.name + ": " + memo.description;
+                memoListElement.appendChild(li);
+                const btn = document.createElement('button');
+                btn.textContent = 'Delete';
+                btn.onclick = async function() {
+                    await fetch('/delete_memo', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ name: memo.name, delete_memo: memo.name}),
+                    });
+                    location.reload();
+                };
+                li.appendChild(btn);
+            });
+        }
+    </script>
     <title>lan tool</title>
 </head>
 <body>
@@ -21,6 +55,12 @@
     <main>
         <h2>Memo Page</h2>
         <p>This is the memo page of the LAN Tool application.</p>
+        <ul id="memo-list"></ul>
+        <form action="/add_memo" method="post">
+            <input type="text" name="memo_name" id="memo_name" placeholder="Memo Name" required>
+            <input type="text" name="memo_description" id="memo_description" placeholder="Memo Description" required>
+            <input type="submit" value="Add Memo" name="submit">
+        </form>
     </main>
     <footer>
         <p>&copy; 2024 LAN Tool</p>
