@@ -102,17 +102,16 @@ app.post("/add_memo", express.urlencoded({ extended: true }), (req, res) => {
   });
 });
 
-async function editmemo(newname, newdescription) {
+async function editmemo(oldname,newname, newdescription) {
   const memoPath = path.join(__dirname, 'memo', 'memo.json');
   try {
     const data = await fs.promises.readFile(memoPath, 'utf-8');
     const memos = JSON.parse(data);
     const updatedMemos = memos.map(memo => {
-      // Example edit: append " - edited" to each memo name
-      return {
-        name: newname + ' - edited',
-        description: newdescription + ' - edited'
-      };
+      if (memo.name === oldname) {
+        return { name: newname, description: newdescription };
+      }
+      return memo;
     });
     await fs.promises.writeFile(memoPath, JSON.stringify(updatedMemos, null, 2));
     return updatedMemos;
@@ -122,8 +121,18 @@ async function editmemo(newname, newdescription) {
   }
 }
 app.post('/edit_memo', async (req, res) => {
-  const updatedMemos = await editmemo(req.body.name, req.body.new_description);
+  const updatedMemos = await editmemo(req.body.oldname,req.body.name, req.body.new_description);
   res.json(updatedMemos);
+});
+app.post("/delete_file" , (req, res) => {
+  const delete_file = req.body.filename;
+  console.log("Deleting file: " + delete_file);
+  fs.unlink("routes/uploads/" + delete_file, (err) => {
+    if (err) {
+      return res.status(500).send('Error deleting file');
+    }
+    res.redirect('/file.html');
+  });
 });
 // Start the server
 app.listen(port, () => {
