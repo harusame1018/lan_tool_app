@@ -47,6 +47,58 @@ app.post("/get_file" , (req, res) => {
   const files = fs.readdirSync("routes/uploads/");
   res.send(files);
 });
+app.get("/memo", (req, res) => {
+  fs.readFile("routes/memo/memo.json", (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading memo file');
+      return;
+    }
+    res.send(data);
+  });
+});
+app.post("/delete_memo", (req, res) => {
+  const delete_memo = req.body.delete_memo;
+  console.log("Deleting memo: " + delete_memo);
+  const memos = JSON.parse(fs.readFileSync("routes/memo/memo.json"));
+  const updatedMemos = memos.filter(memo => memo.name !== delete_memo);
+  fs.writeFile("routes/memo/memo.json", JSON.stringify(updatedMemos, null, 2), (err) => {
+    if (err) {
+      res.status(500).send('Error deleting memo');
+      return;
+    }
+    res.redirect('/memo.html');
+  });
+});
+app.post("/clear_memo", (req, res) => {
+  fs.writeFile("routes/memo/memo.json", "[]", (err) => {
+    if (err) {
+      res.status(500).send('Error clearing memo file');
+      return;
+    }
+    res.redirect('/memo.html');
+  });
+});
+app.post("/add_memo", express.urlencoded({ extended: true }), (req, res) => {
+  const memoName = req.body.memo_name;
+  const memoDescription = req.body.memo_description;
+
+  fs.readFile("routes/memo/memo.json", (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading memo file');
+      return;
+    }
+    let memos = JSON.parse(data);
+    memos.push({ name: memoName, description: memoDescription });
+
+    fs.writeFile("routes/memo/memo.json", JSON.stringify(memos, null, 2), (err) => {
+      if (err) {
+        res.status(500).send('Error writing to memo file');
+        return;
+      }
+      res.redirect('/memo.html');
+    });
+  });
+});
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
