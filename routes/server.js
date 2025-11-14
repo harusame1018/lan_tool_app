@@ -16,7 +16,7 @@ app.use(fileUpload({
 app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.static('routes/public'));
-
+app.use(express.json());
 // Sample route
 app.get('/', (req, res) => {
   fs.readFile("index.html", (err, data) => {
