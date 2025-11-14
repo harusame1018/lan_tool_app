@@ -5,8 +5,10 @@ const app = express();
 const port = 3000;
 const cors = require('cors');
 const  path = require('path');
+
 const uploadPath = path.join(__dirname, 'uploads');
 // Middleware to handle file uploads
+
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 }, // 50 MB limit
   abortOnLimit: true,
@@ -98,6 +100,30 @@ app.post("/add_memo", express.urlencoded({ extended: true }), (req, res) => {
       res.redirect('/memo.html');
     });
   });
+});
+
+async function editmemo(newname, newdescription) {
+  const memoPath = path.join(__dirname, 'memo', 'memo.json');
+  try {
+    const data = await fs.promises.readFile(memoPath, 'utf-8');
+    const memos = JSON.parse(data);
+    const updatedMemos = memos.map(memo => {
+      // Example edit: append " - edited" to each memo name
+      return {
+        name: newname + ' - edited',
+        description: newdescription + ' - edited'
+      };
+    });
+    await fs.promises.writeFile(memoPath, JSON.stringify(updatedMemos, null, 2));
+    return updatedMemos;
+  } catch (err) {
+    console.error('Error reading memo file:', err);
+    return [];
+  }
+}
+app.post('/edit_memo', async (req, res) => {
+  const updatedMemos = await editmemo(req.body.name, req.body.new_description);
+  res.json(updatedMemos);
 });
 // Start the server
 app.listen(port, () => {

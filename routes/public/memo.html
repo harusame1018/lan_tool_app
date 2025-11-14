@@ -35,6 +35,23 @@
                     location.reload();
                 };
                 li.appendChild(btn);
+                const editbtn = document.createElement('button');
+                editbtn.textContent = 'Edit';
+                editbtn.onclick = async function() {
+                    const newName = prompt('Enter new name:', memo.name);
+                    const newDescription = prompt('Enter new description:', memo.description);
+                    if (newDescription !== null) {
+                        await fetch('/edit_memo', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ name: newName, new_description: newDescription }),
+                        });
+                        location.reload();
+                    }
+                };
+                li.appendChild(editbtn);
             });
         }
     </script>
