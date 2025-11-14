@@ -20,6 +20,19 @@
                 downloadLink.href = '/get_file?filename=' + encodeURIComponent(file);
                 downloadLink.textContent = ' (Download)';
                 li.appendChild(downloadLink);
+                const deletefileBtn = document.createElement('button');
+                deletefileBtn.textContent = 'Delete';
+                deletefileBtn.onclick = async function() {
+                    await fetch('/delete_file', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ filename: file }),
+                    });
+                    location.reload();
+                };
+                li.appendChild(deletefileBtn);
             });
         }
     </script>

@@ -30,7 +30,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ name: memo.name, delete_memo: memo.name}),
+                        body: JSON.stringify({ name: memo.name, delete_memo: memo.name }),
                     });
                     location.reload();
                 };
@@ -46,7 +46,7 @@
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ name: newName, new_description: newDescription }),
+                            body: JSON.stringify({ name: newName, new_description: newDescription, oldname: memo.name}),
                         });
                         location.reload();
                     }
