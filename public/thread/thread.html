@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script>
+        const params = new URLSearchParams(window.location.search);
+        const threadid = params.get("id");
+        async function get_board_list() {
+            const response = await fetch("/board/list");
+            const res = await response.json();
+            return res
+        }
+        window.onload = async function() {
+            const boards = await get_board_list();
+            if (boards.some(board => board.id === threadid)) {
+                
+            }
+            else {
+                window.location.href = "../board.html";
+            }
+        }
+     </script>
+    <title>lan tool</title>
+</head>
+<body>
+    <header>
+        <h1>LAN Tool</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="file.html">file</a></li>
+                <li><a href="memo.html">memo</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+    </main>
+    <footer>
+        <p>&copy; 2024 LAN Tool</p>
+    </footer>
+</body>
+</html>

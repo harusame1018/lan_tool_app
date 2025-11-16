@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .thread-item {
+            display: inline-block;
+            border: solid 1px black;
+            margin: auto;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lan tool</title>
+    <script>
+        async function get_board_list() {
+            const response = await fetch("/board/list");
+            const res = await response.json();
+            return res;
+        }
+        window.onload = async function() {
+            const board_list = document.getElementById("board_list");
+            const boards = await get_board_list();
+            boards.forEach(board => {
+                const group = document.createElement("div");
+                const title = document.createElement("h2");
+                const link = document.createElement("a");
+                const date = document.createElement("p");
+                const thread_id = board.id;
+                link.href = `thread/thread.html?id=${thread_id}`
+                group.classList.add("thread-item")
+                link.textContent = board.title;
+                date.textContent = board.date;
+                group.appendChild(title);
+                group.appendChild(date);
+                title.appendChild(link);
+                board_list.appendChild(group);
+                for(let i=0;i<3;i++) {
+                    const br = document.createElement("br");
+                    board_list.appendChild(br);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>LAN Tool</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="file.html">file</a></li>
+                <li><a href="memo.html">memo</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <ul id="board_list">
+            <h3>
+                スレ一覧
+            </h3>
+        </ul>
+        <h3>スレを建てる</h3>
+        <form action="/board/post" method="post">
+            <input name="thread_title" placeholder="スレ名" type="text" required>
+            <br>
+            <textarea name="main_text" placeholder="本文" type="text" required></textarea>
+            <br>
+            <input name="submit" placeholder="作成" type="submit">
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 LAN Tool</p>
+    </footer>
+</body>
+</html>
