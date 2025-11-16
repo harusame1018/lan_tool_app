@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .res_list {
+            display:inline-block;
+            border:1px solid black;
+            padding-right:10px;
+            padding-left:10px;
+            margin:auto;
+        }
+    </style>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const threadid = params.get("id");
+        async function get_board_list() {
+            const response = await fetch("/board/list");
+            const res = await response.json();
+            return res
+        }
+        window.onload = async function() {
+            const boards = await get_board_list();
+            if (boards.some(board => board.id === threadid)) {
+                const threads = await fetch("/thread/get_thread",{
+                    method: "post",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        thread_id: threadid
+                    })
+                });
+                const thread = await threads.json();
+                const res_list = document.getElementById("res_list");
+                console.log(thread.length);
+               
+                thread.forEach(item => {
+                    const div = document.createElement("div");
+                    const h2 = document.createElement("h2");
+                    const h4 = document.createElement("h4");
+                    const p = document.createElement("p");
+                    h2.textContent = item.id;
+                    p.textContent = item.date;
+                    h4.textContent = item.text;
+                    div.classList.add("res_list");
+                    res_list.appendChild(div)
+                    div.appendChild(h2);
+                    div.appendChild(p);
+                    div.appendChild(h4);
+                });
+                
+                /*for(let i=0;i<thread.length;i++){
+                    const item = thread[i];
+                    const h1 = document.createElement("h1");
+                    const h4 = document.createElement("h4");
+                    const p = document.createElement("p");
+                    const br = document.createElement("br");
+                    h1.textContent = item.id;
+                    p.textContent = item.date;
+                    h4.textContent = item.text;
+                    h1.classList.add("res_list");
+                    p.classList.add("res_list");
+                    h4.classList.add("res_list");
+                    res_list.appendChild(h1);
+                    res_list.appendChild(p);
+                    res_list.appendChild(br);
+                    res_list.appendChild(h4);
+                }*/
+            }
+            else {
+                window.location.href = "../board.html";
+            }
+        }
+     </script>
+    <title>lan tool</title>
+</head>
+<body>
+    <header>
+        <h1>LAN Tool</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../file.html">file</a></li>
+                <li><a href="../memo.html">memo</a></li>
+                <li><a href="../settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <ul id="res_list">
+
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; 2024 LAN Tool</p>
+    </footer>
+</body>
+</html>
