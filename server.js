@@ -10,6 +10,7 @@ const { v4: uuidv4 } = require('uuid');
 const uploadPath = path.join(__dirname, 'uploads');
 const boardrouter = require("./routes/board.js");
 const threadrouter = require("./routes/thread.js");
+app.use(cookieParser());
 app.use("/board",boardrouter)
 app.use("/thread",threadrouter)
 app.use(fileUpload({

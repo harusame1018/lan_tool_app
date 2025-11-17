@@ -84,8 +84,9 @@
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: "include",
                 body:JSON.stringify({
-                    thread_id:Number(threadid),
+                    thread_id:threadid,
                     new_res:send_data,
                     user_id:await getmyid()
                 })
