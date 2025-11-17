@@ -71,7 +71,7 @@ router.post("/post", async (req,res) => {
        id = nanoid(); 
        console.log("change id:",id);
     }
-    res.cookie("id",id);
+    res.cookie(`id${thread_id}`,id);
     try {
         thread_list.push(new_thread);
         console.log(new_thread);
