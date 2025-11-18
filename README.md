@@ -2,8 +2,8 @@
 lan内で使える便利ツールアプリ
 
 ## 使用方法
-1. ```cd routes```
-2. ```node server.js```
+1. lan_tool_appに移動
+2. ```node server.js```を実行
 3. 表示されるアドレスにアクセス
 
 ## 初期化方法
