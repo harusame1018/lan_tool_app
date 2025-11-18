@@ -2,5 +2,9 @@
   {
     "name": "レモン",
     "description": "病院の予約"
+  },
+  {
+    "name": "寝る",
+    "description": "寝ます"
   }
 ]
