@@ -12,6 +12,7 @@
             margin:auto;
         }
     </style>
+    <link rel="stylesheet" href="../style.css">
     <script>
         const params = new URLSearchParams(window.location.search);
         const threadid = params.get("id");
@@ -114,7 +115,7 @@
 
         </ul>
         <form id="send_res" onsubmit="return false;">
-            <input id="new_res" type="text" placeholder="本文">
+            <textarea id="new_res" type="text" placeholder="本文"></textarea>
             <button id="send" onclick="send_res()">送信</button>
         </form>
     </main>
